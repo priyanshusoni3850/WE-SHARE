@@ -1,0 +1,116 @@
+body {
+  background-color: black;
+  font-family: 'Roboto', sans-serif;
+}
+
+.main {
+  height: 100vh;
+  width: 100vw;
+}
+
+.nav {
+  background-color: rgb(234, 28, 78);
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3),
+    0px 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: white;
+  margin-top: 1rem;
+  padding: 10px;
+}
+
+.nav h1 {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.file-share-container {
+  margin: 20px auto;
+  width: 50%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(234, 28, 78);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+input {
+  border-radius: 10px;
+  border: 1px solid rgb(234, 28, 78);
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+button {
+  background-color: #d35491;
+  border-radius: 10px;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.downlaodLink {
+  margin: 10px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.error-message {
+  color: orange;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+
+
+.filedata {
+  background-color: rgb(234, 28, 78);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.filedata p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.filedata ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.filedata li {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.downloadanchor{
+  text-decoration: none;
+  color: white;
+}
