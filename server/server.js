@@ -87,7 +87,9 @@ switch (ext) {
 res.setHeader('Content-Type', contentType);
 
 
-
+app,get("/",(req,res)=>{
+  res.send("hii");
+})
 
   res.sendFile(save);
   // res.sendFile(`${__dirname}/uploads/${filename}`);
