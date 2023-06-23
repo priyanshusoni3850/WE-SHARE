@@ -10,6 +10,7 @@ const Text=require("./model/Text");
 require("./db/conn")
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
+require('dotenv').config();
 
 
 // Set up middleware
@@ -173,24 +174,74 @@ app.get('/api/shared-text/:getcode', async (req, res) => {
 
 /////////////////////////////////////////////////////////// new code///////////////////////////////////////////////////////////
 
-
+/////////////////////////////////////////////myy code ///////////////////////////////////////////////////////
 // cheking for code
 
+// app.get('/api/check-code/:code', async (req, res) => {
+//   const options = { maxTimeMS: 20000 };
+//   // console.log("checked");
+//   const codefind = req.params;
+//   console.log(codefind);
+//   const result = await File.findOne({ Code:code }).maxTimeMS(30000);
+//   // console.log(result);
+
+//   if (result) {
+//     // res.send("already exist");
+//     console.log("exist");
+//     return res.json({ message:true });
+//   } else {
+//     return res.json({ message: false });
+//   } 
+
+
+// const result = await File.findOne({ Code:codefind },options).lean().cursor();
+
+// console.log(result);
+//   if (result) {
+//     // res.send("already exist");
+//     console.log("exist");
+//     return res.json({ message:true });
+//   } else {
+//     return res.json({ message: false });
+//   } 
+
+
+// });
+///////////////////////////////////////////////////////////my code ////////////////////////////////////////////////////////
 app.get('/api/check-code/:code', async (req, res) => {
-  // console.log("checked");
-  const { code } = req.params;
-  console.log(code);
-  const result = await File.findOne({ Code:code });
-  // console.log(result);
+  const options = { maxTimeMS: 20000 };
+  const code = req.params.code;
+
+  const result = await File.findOne({ Code: code.toString() }, null, {timeout:30000});
+
+  console.log(result);
 
   if (result) {
-    // res.send("already exist");
     console.log("exist");
     return res.json({ message:true });
   } else {
     return res.json({ message: false });
   } 
+
+  // File.findOne({ Code: code }, null, { timeout: 30000 }, (err, file) => {
+  //   console.log(file);
+  // });
+  
+
+
+// console.log(result);
+
+//   if (result) {
+//     console.log("exist");
+//     return res.json({ message:true });
+//   } else {
+//     return res.json({ message: false });
+//   } 
 });
+
+
+
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
