@@ -9,7 +9,13 @@ const File=require("./model/File");
 const Text=require("./model/Text");
 require("./db/conn")
 // Enable Cross-Origin Resource Sharing (CORS)
-app.use(cors());
+app.use(cors(
+  {
+    origin:["https://we-share-zeta.vercel.app/"],
+    methods:["POST","GET"],
+    credentials: true
+  }
+));
 require('dotenv').config();
 
 
