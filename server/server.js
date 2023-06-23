@@ -88,8 +88,8 @@ switch (ext) {
 res.setHeader('Content-Type', contentType);
 
 
-app,get("/",(req,res)=>{
-  res.send("hii");
+app.get("/",(req,res)=>{
+  res.json("hii");
 })
 
   res.sendFile(save);
