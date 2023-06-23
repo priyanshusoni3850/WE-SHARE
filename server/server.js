@@ -87,13 +87,14 @@ switch (ext) {
 }
 res.setHeader('Content-Type', contentType);
 
+  res.sendFile(save);
+  // res.sendFile(`${__dirname}/uploads/${filename}`);
+});
+
+
 
 app.get("/",(req,res)=>{
   res.json("hii");
-})
-
-  res.sendFile(save);
-  // res.sendFile(`${__dirname}/uploads/${filename}`);
 });
 
 
