@@ -88,7 +88,7 @@ switch (ext) {
 res.setHeader('Content-Type', contentType);
 
 
-app,get("/",(req,res)=>{
+app.get("/",(req,res)=>{
   res.send("hii");
 })
 
