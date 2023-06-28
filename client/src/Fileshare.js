@@ -19,7 +19,7 @@ export default function Fileshare() {
             // resetting error msg
             setErrorMsg('');
             // checking for code is present or not
-            const response = await axios.get(`http://localhost:5000/api/check-code/${code}`);
+            const response = await axios.get(`https://we-share-lj6g.onrender.com/api/check-code/${code}`);
             if (response.data.message === true) {
                 setErrorMsg('This code is already taken');
                 return;
@@ -29,7 +29,7 @@ export default function Fileshare() {
                 formData.append('file', selectedFile);
                 formData.append('Code', code);
 
-                const res = await axios.post('http://localhost:5000/api/upload', formData, {
+                const res = await axios.post('https://we-share-lj6g.onrender.com/api/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -92,7 +92,7 @@ export default function Fileshare() {
                                     <button
                                         className='downloadLink'
                                         onClick={() => {
-                                            const downloadLink = `http://localhost:5000/api/download/${code}`;
+                                            const downloadLink = `https://we-share-lj6g.onrender.com/api/download/${code}`;
                                             navigator.clipboard.writeText(downloadLink);
                                             alert('Download link copied to clipboard!');
                                         }}
@@ -100,14 +100,14 @@ export default function Fileshare() {
                                         Copy Link
                                     </button>
                                     <button className='downloadLink'>
-                                    <a className='downloadanchor' href={`http://localhost:5000/api/download/${code}`}>
+                                    <a className='downloadanchor' href={`https://we-share-lj6g.onrender.com/api/download/${code}`}>
                                         Download
                                     </a>
                                     </button>
                                 </li>
                                 <p>Scan to Download</p>
                                 <li>
-                                    <QrCode value={`http://localhost:5000/api/download/${code}`} />
+                                    <QrCode value={`https://we-share-lj6g.onrender.com/api/download/${code}`} />
                                 </li>
                             </ul>
                         </div>

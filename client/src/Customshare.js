@@ -19,7 +19,7 @@ export default function Customshare() {
   useEffect(() => {
     const fetchSharedText = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/shared-text/${codeParam}`);
+        const res = await axios.get(`https://we-share-lj6g.onrender.com/api/shared-text/${codeParam}`);
         setSharedText(res.data.text);
       } catch (err) {
         console.error(err);
@@ -31,7 +31,7 @@ export default function Customshare() {
   useEffect(() => {
     const handleShareText = async () => {
       try {
-        await axios.post('http://localhost:5000/api/share', { text: sharedText,clientcode:codeParam });
+        await axios.post('https://we-share-lj6g.onrender.com/api/share', { text: sharedText,clientcode:codeParam });
         //   setSharedText('');
       } catch (err) {
         console.error(err);
