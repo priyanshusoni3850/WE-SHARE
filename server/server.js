@@ -11,7 +11,7 @@ require("./db/conn")
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors(
   {
-    origin:["https://we-share-zeta.vercel.app/"],
+    origin:["https://rk-share.netlify.app/"],
     methods:["POST","GET"],
     credentials: true
   }
