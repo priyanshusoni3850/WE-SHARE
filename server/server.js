@@ -24,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('public'));
+app.use(express.static('../frontend/build'));
+
 
 // Set up storage location for uploaded files
 const storage = multer.diskStorage({
