@@ -23,6 +23,7 @@ require('dotenv').config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static('public'));
 
 // Set up storage location for uploaded files
 const storage = multer.diskStorage({
