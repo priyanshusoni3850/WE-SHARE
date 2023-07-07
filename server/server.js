@@ -127,7 +127,8 @@ app.get('/api/download/:Code', async (req, res) => {
   // Set the Content-Type header based on the file mimetype
   res.setHeader('Content-Type', filedata.mimetype);
   
-  res.sendFile(filePath);
+  // res.sendFile(filePath);
+  res.send("hii")
 });
 
 
