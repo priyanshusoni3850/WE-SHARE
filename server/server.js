@@ -11,7 +11,8 @@ require("./db/conn")
 // Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors(
   {
-    origin:["https://rk-share.netlify.app/"],
+    // origin:["https://rk-share.netlify.app/"],
+    origin:'*',
     methods:["POST","GET"],
     credentials: true
   }
