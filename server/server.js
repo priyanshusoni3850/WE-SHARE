@@ -176,7 +176,7 @@ app.post('/api/share', async (req, res) => {
   const client_code = req.body.clientcode;
   console.log(client_code);
 
-  const code_exist=await Text.findOne({code:client_code}).exec(); // Modified this line
+  let code_exist=await Text.findOne({code:client_code}).exec(); // Modified this line
 
   if(code_exist){
     code_exist.content=text;
