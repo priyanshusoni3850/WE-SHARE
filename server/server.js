@@ -68,37 +68,78 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   return res.json(uploadedFile);
 });
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Endpoint for downloading files
-app.get('/api/download/:Code', async(req, res) => {
-  // console.log("clicked");
+
+
+
+// app.get('/api/download/:Code', async(req, res) => {
+//   // console.log("clicked");
+//   const FindCode = req.params.Code;
+//   const filedata=await File.findOne({Code:FindCode});
+//   const filename=await filedata.filename;
+//   const save=`${__dirname}/uploads/${filename}`;
+//   save.save();
+//   // res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+// // Set the Content-Disposition header to "attachment"
+// res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+
+// // Set the Content-Type header based on the file extension
+// const ext = path.extname(filename);
+// let contentType = 'application/octet-stream';
+// switch (ext) {
+//   case '.docx':
+//     contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+//     break;
+//   case '.pdf':
+//     contentType = 'application/pdf';
+//     break;
+//   default:
+//     break;
+// }
+// res.setHeader('Content-Type', contentType);
+
+//   res.sendFile(save);
+//   // res.sendFile(`${__dirname}/uploads/${filename}`);
+// });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+app.get('/api/download/:Code', async (req, res) => {
   const FindCode = req.params.Code;
-  const filedata=await File.findOne({Code:FindCode});
-  const filename=await filedata.filename;
-  const save=`${__dirname}/uploads/${filename}`;
-  save.save();
-  // res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-
-// Set the Content-Disposition header to "attachment"
-res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-
-// Set the Content-Type header based on the file extension
-const ext = path.extname(filename);
-let contentType = 'application/octet-stream';
-switch (ext) {
-  case '.docx':
-    contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    break;
-  case '.pdf':
-    contentType = 'application/pdf';
-    break;
-  default:
-    break;
-}
-res.setHeader('Content-Type', contentType);
-
-  res.sendFile(save);
-  // res.sendFile(`${__dirname}/uploads/${filename}`);
+  const filedata = await File.findOne({ Code: FindCode });
+  
+  if (!filedata) {
+    return res.status(404).json({ error: 'File not found' });
+  }
+  
+  const filePath = path.join(__dirname, 'uploads', filedata.filename);
+  
+  // Set the Content-Disposition header to "attachment"
+  res.setHeader('Content-Disposition', `attachment; filename="${filedata.originalname}"`);
+  
+  // Set the Content-Type header based on the file mimetype
+  res.setHeader('Content-Type', filedata.mimetype);
+  
+  res.sendFile(filePath);
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 
