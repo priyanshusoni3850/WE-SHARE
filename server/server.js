@@ -120,6 +120,7 @@ app.get('/api/download/:Code', async (req, res) => {
   }
   
   const filePath = path.join(__dirname, 'uploads', filedata.filename);
+  console.log(filePath);
   
   // Set the Content-Disposition header to "attachment"
   res.setHeader('Content-Disposition', `attachment; filename="${filedata.originalname}"`);
@@ -127,8 +128,8 @@ app.get('/api/download/:Code', async (req, res) => {
   // Set the Content-Type header based on the file mimetype
   res.setHeader('Content-Type', filedata.mimetype);
   
-  // res.sendFile(filePath);
-  res.send("hii")
+  res.sendFile(filePath);
+  // res.send("hii")
 });
 
 
