@@ -15,6 +15,7 @@ import 'prismjs/components/prism-json.min.js';
 export default function Customshare() {
   const { codeParam } = useParams();
   const [sharedText, setSharedText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);//added
 
   useEffect(() => {
     const fetchSharedText = async () => {
@@ -30,12 +31,15 @@ export default function Customshare() {
 
   useEffect(() => {
     const handleShareText = async () => {
+      setIsLoading(true); // Added this line
       try {
         await axios.post('https://we-share-lj6g.onrender.com/api/share', { text: sharedText,clientcode:codeParam });
         //   setSharedText('');
       } catch (err) {
         console.error(err);
       }
+
+      setIsLoading(false); // Added this line
     };
     handleShareText();
   }, [sharedText,codeParam]);
@@ -52,7 +56,8 @@ export default function Customshare() {
   return (
     <div className='container'>
       <h2>Share a Text</h2>
-      <textarea value={sharedText} onChange={(e) => setSharedText(e.target.value)} />
+      <textarea value={sharedText} onChange={(e) => setSharedText(e.target.value)}   onBlur={handleShareText}
+        disabled={isLoading} />
 
 
     </div>
