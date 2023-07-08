@@ -3,6 +3,7 @@ import axios from 'axios';
 import QrCode from 'qrcode.react';
 import './css/Fileshare.css';
 import { useDropzone } from 'react-dropzone';
+import logo from './css/img/logo.png';
 
 const TYPING_DELAY = 100; // Adjust the typing delay as needed
 
@@ -14,6 +15,7 @@ export default function FileShare() {
   const [fileUploading, setFileUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [typingText, setTypingText] = useState('');
+  const [isFileSelected, setIsFileSelected] = useState(false);
 
   const redirectToCustomCode = () => {
     const randomCode = Math.floor(Math.random() * 1000000);
@@ -55,12 +57,12 @@ export default function FileShare() {
           }
         );
         setFileUploading(true);
+        setUploadProgress(0); // Reset the upload progress
 
         // Upload completed
         setTimeout(() => {
           setUploadedFiles(res.data);
           setFileUploading(false);
-          setUploadProgress(0); // Reset the upload progress
         }, 1000);
       }
     } catch (err) {
@@ -78,6 +80,7 @@ export default function FileShare() {
 
   const onDrop = (acceptedFiles) => {
     setSelectedFiles(acceptedFiles);
+    setIsFileSelected(acceptedFiles.length > 0);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true });
@@ -106,6 +109,7 @@ export default function FileShare() {
     <div className="main">
       <nav className="navbar">
         <div className="left-section">
+          <img src={logo} alt="Logo" className="navbar-logo" />
           <h1>{typingText}</h1>
         </div>
         <div className="right-section">
@@ -114,10 +118,8 @@ export default function FileShare() {
       </nav>
 
       <div className="file-share-container">
-        <div className="card" uploadedFile={uploadedFiles}>
-          <div
-            {...getRootProps({ className: `dropzone ${isDragActive ? 'active' : ''}` })}
-          >
+        <div className={`card ${uploadedFiles.length > 0 ? 'uploaded' : ''}`}>
+          <div {...getRootProps({ className: `dropzone ${isDragActive ? 'active' : ''} ${isFileSelected ? 'file-selected' : ''}` })}>
             <input {...getInputProps()} />
             {isDragActive ? (
               <>
@@ -131,7 +133,7 @@ export default function FileShare() {
                 {selectedFiles.length > 0 ? (
                   <span>Selected Files: {selectedFiles.map((file) => file.name).join(', ')}</span>
                 ) : (
-                  'Drag and drop files here or click to select files'
+                  ''
                 )}
               </p>
             )}

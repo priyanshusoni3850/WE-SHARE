@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './css/Customshare.css';
+import logo from './css/img/logo.png'; // Assuming you have the logo image file
 
 const TYPING_DELAY = 100; // Adjust the typing delay as needed
 
@@ -54,9 +55,9 @@ export default function Customshare() {
 
   useEffect(() => {
     let typingTimer;
-    if (typingText.length < 12) {
+    if (typingText.length < 19) {
       typingTimer = setInterval(() => {
-        setTypingText((prevText) => prevText + 'Share a Text'[prevText.length]);
+        setTypingText((prevText) => prevText + 'Share Text Here....'[prevText.length]);
       }, TYPING_DELAY);
     }
     return () => clearInterval(typingTimer);
@@ -66,7 +67,10 @@ export default function Customshare() {
     <div className="container">
       <nav className="textnavbar">
         <div className="navbar-content">
-          <h2>{typingText}</h2>
+          <div className="left-section">
+            <img src={logo} alt="Logo" className="navbar-logo" />
+            <h2>{typingText}</h2>
+          </div>
           <div>
             <button onClick={handleShareFile} className="sharefilebutton">
               Share a File
