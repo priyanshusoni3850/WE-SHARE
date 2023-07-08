@@ -7,8 +7,8 @@ import { useDropzone } from 'react-dropzone';
 const TYPING_DELAY = 100; // Adjust the typing delay as needed
 
 export default function FileShare() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [code, setCode] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [fileUploading, setFileUploading] = useState(false);
@@ -34,7 +34,9 @@ export default function FileShare() {
         return;
       } else {
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        selectedFiles.forEach((file) => {
+          formData.append('files', file);
+        });
         formData.append('Code', code);
 
         const res = await axios.post(
@@ -56,7 +58,7 @@ export default function FileShare() {
 
         // Upload completed
         setTimeout(() => {
-          setUploadedFile(res.data);
+          setUploadedFiles(res.data);
           setFileUploading(false);
           setUploadProgress(0); // Reset the upload progress
         }, 1000);
@@ -75,10 +77,10 @@ export default function FileShare() {
   };
 
   const onDrop = (acceptedFiles) => {
-    setSelectedFile(acceptedFiles[0]);
+    setSelectedFiles(acceptedFiles);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, multiple: true });
 
   useEffect(() => {
     let typingTimer;
@@ -89,6 +91,16 @@ export default function FileShare() {
     }
     return () => clearInterval(typingTimer);
   }, [typingText]);
+
+  const handleCopyLink = () => {
+    try {
+      const downloadLink = `https://we-share-lj6g.onrender.com/api/download/${code}`;
+      navigator.clipboard.writeText(downloadLink);
+      alert('Download link copied to clipboard!');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="main">
@@ -102,23 +114,24 @@ export default function FileShare() {
       </nav>
 
       <div className="file-share-container">
-        <div className="card" uploadedFile={uploadedFile}>
+        <div className="card" uploadedFile={uploadedFiles}>
           <div
-            {...getRootProps()}
-            className={`dropzone ${isDragActive ? 'active' : ''}`}
+            {...getRootProps({ className: `dropzone ${isDragActive ? 'active' : ''}` })}
           >
             <input {...getInputProps()} />
             {isDragActive ? (
               <>
-                <p>Drop the file here...</p>
-                {selectedFile && <p>Selected File: {selectedFile.name}</p>}
+                <p>Drop the files here...</p>
+                {selectedFiles.length > 0 && (
+                  <p>Selected Files: {selectedFiles.map((file) => file.name).join(', ')}</p>
+                )}
               </>
             ) : (
               <p>
-                {selectedFile ? (
-                  <span>Selected File: {selectedFile.name}</span>
+                {selectedFiles.length > 0 ? (
+                  <span>Selected Files: {selectedFiles.map((file) => file.name).join(', ')}</span>
                 ) : (
-                  'Drag and drop a file here or click to select a file'
+                  'Drag and drop files here or click to select files'
                 )}
               </p>
             )}
@@ -133,39 +146,30 @@ export default function FileShare() {
 
           {errorMsg && <div className="error-message">{errorMsg}</div>}
 
-          {uploadedFile.filename && (
+          {uploadedFiles.length > 0 && (
             <div className="filedata">
-              <p>File uploaded successfully:</p>
+              <p>Files uploaded successfully:</p>
               <ul>
-                <li>Code: {code}</li>
-                <li>Original name: {uploadedFile.originalname}</li>
-                <li>Size: {(uploadedFile.size / 1024).toFixed(2)} KB</li>
-                <li>
-                  <button
-                    className="copy-button"
-                    onClick={() => {
-                      const downloadLink = `https://we-share-lj6g.onrender.com/api/download/${code}`;
-                      navigator.clipboard.writeText(downloadLink);
-                      alert('Download link copied to clipboard!');
-                    }}
-                  >
-                    Copy Link
-                  </button>
-                  <button className="download-button">
-                    <a
-                      className="downloadanchor"
-                      href={`https://we-share-lj6g.onrender.com/api/download/${code}`}
-                    >
-                      Download
-                    </a>
-                  </button>
-                </li>
-                <p>Scan to Download</p>
-                <li>
-                  <QrCode
-                    value={`https://we-share-lj6g.onrender.com/api/download/${code}`}
-                  />
-                </li>
+                {uploadedFiles.map((file) => (
+                  <li key={file.filename}>
+                    <p>Code: {code}</p>
+                    <p>Original name: {file.originalname}</p>
+                    <p>Size: {(file.size / 1024).toFixed(2)} KB</p>
+                    <button className="copy-button" onClick={handleCopyLink}>
+                      Copy Link
+                    </button>
+                    <button className="download-button">
+                      <a
+                        className="downloadanchor"
+                        href={`https://we-share-lj6g.onrender.com/api/download/${code}`}
+                      >
+                        Download
+                      </a>
+                    </button>
+                    <p>Scan to Download</p>
+                    <QrCode value={`https://we-share-lj6g.onrender.com/api/download/${code}`} />
+                  </li>
+                ))}
               </ul>
             </div>
           )}

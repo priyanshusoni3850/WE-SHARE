@@ -43,7 +43,7 @@ const upload = multer({
 });
 
 // Endpoint for uploading files
-app.post('/api/upload', upload.array('file'), async (req, res) => {
+app.post('/api/upload', upload.array('files'), async (req, res) => {
   const files = req.files;
 
   if (!files || files.length === 0) {
