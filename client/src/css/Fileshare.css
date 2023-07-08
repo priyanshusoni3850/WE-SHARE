@@ -1,6 +1,9 @@
+
 body {
-  background-color: black;
+  background-color: #fff;
   font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .main {
@@ -8,20 +11,56 @@ body {
   width: 100vw;
 }
 
-.nav {
-  background-color: rgb(234, 28, 78);
+.dropzone {
+  border: 2px dashed rgb(63, 154, 215);
   border-radius: 10px;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3),
-    0px 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: white;
-  margin-top: 1rem;
-  padding: 10px;
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out;
 }
 
-.nav h1 {
+.dropzone.active {
+  border-color: rgb(253, 163, 59);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color:  rgb(63, 154, 215);
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3), 0px 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  color: rgb(63, 154, 215);
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  padding: 1rem;
+}
+
+.navbar h1 {
   font-size: 25px;
   font-weight: bold;
+  margin: 0;
+  color: white;
+}
+
+.navbar button {
+  background-color: rgb(63, 154, 215);
+  border-radius: 10px;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navbar button:hover {
+  background-color: rgb(253, 163, 59);
 }
 
 .file-share-container {
@@ -33,7 +72,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(234, 28, 78);
+  background-color: rgb(210, 236, 243);
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2);
   padding: 20px;
@@ -42,7 +81,7 @@ body {
 h2 {
   font-size: 30px;
   font-weight: bold;
-  color: white;
+  color: rgb(63, 154, 215);
   margin-bottom: 20px;
 }
 
@@ -51,43 +90,97 @@ label {
   margin-bottom: 10px;
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: rgb(63, 154, 215);
 }
 
 input {
   border-radius: 10px;
-  border: 1px solid rgb(234, 28, 78);
+  border: 1px solid rgb(63, 154, 215);
   padding: 10px;
   font-size: 20px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
-button {
-  background-color: #d35491;
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.enter-code {
+  color: rgb(63, 154, 215);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.upload-button {
+  background-color: rgb(63, 154, 215);
   border-radius: 10px;
   color: white;
-  padding: 10px;
+  padding: 10px 20px; /* Added padding for more space */
   cursor: pointer;
   font-size: 20px;
   font-weight: bold;
+  border: none;
+  margin-left: 10px; /* Added margin to create space between buttons */
+  display: flex;
+  align-items: center;
 }
 
-.downlaodLink {
+.upload-button:hover {
+  background-color: rgb(253, 163, 59);
+}
+
+.upload-progress {
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.copy-button,
+.download-button {
+  background-color: rgb(63, 154, 215);
+  border-radius: 10px;
+  color: white;
+  padding: 10px 20px; /* Added padding for more space */
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  margin-left: 10px; /* Added margin to create space between buttons */
+}
+
+.upload-button:hover,
+.copy-button:hover,
+.download-button:hover {
+  background-color: rgb(253, 163, 59);
+}
+
+.downloadLink {
   margin: 10px 0;
   font-size: 20px;
   font-weight: bold;
+  color: rgb(63, 154, 215);
 }
 
 .error-message {
-  color: orange;
+  color: red;
   font-weight: bold;
   font-size: 20px;
 }
 
-
+.file-share-container {
+  margin: 20px auto;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .filedata {
-  background-color: rgb(234, 28, 78);
+  background-color: rgb(210, 236, 243);
   padding: 20px;
   border-radius: 10px;
 }
@@ -95,7 +188,7 @@ button {
 .filedata p {
   font-size: 24px;
   font-weight: bold;
-  color: #fff;
+  color: rgb(63, 154, 215);
   margin-bottom: 10px;
 }
 
@@ -107,10 +200,87 @@ button {
 .filedata li {
   margin-bottom: 10px;
   font-size: 20px;
-  color: #fff;
+  color: rgb(63, 154, 215);
 }
 
-.downloadanchor{
+.downloadanchor {
   text-decoration: none;
   color: white;
+}
+
+.filedata {
+  background-color: rgb(210, 236, 243);
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+}
+
+.filedata p {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(63, 154, 215);
+  margin-bottom: 10px;
+}
+
+.filedata ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.filedata li {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: rgb(63, 154, 215);
+}
+
+.filedata li:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+  margin-top: 20px; /* Add some space between the QR code and the list items */
+}
+
+.filedata li:last-child button {
+  margin-right: 10px;
+}
+
+.filedata li:last-child .downloadLink a {
+  margin-left: 10px;
+}
+
+.filedata li:last-child .downloadLink a:hover {
+  text-decoration: underline;
+}
+
+.filedata li:last-child p {
+  margin-bottom: 5px;
+}
+
+.filedata li:last-child .qrcode-container {
+  display: flex;
+  justify-content: center; /* Center the QR code horizontally */
+  align-items: center; /* Center the QR code vertically */
+  margin-top: 10px; /* Add some space between the QR code and the list items */
+}
+
+.filedata li:last-child .qrcode-container > div {
+  max-width: 200px; /* Set a max width for the QR code */
+}
+
+.progress-bar {
+  height: 10px;
+  background: linear-gradient(to top, rgb(210, 236, 243) 0%, transparent 0%);
+  transition: background 0.5s ease-in-out;
+}
+
+.main.uploading .progress-bar {
+  background: linear-gradient(to top, rgb(210, 236, 243) var(--progress), transparent 0%);
+}
+
+@media (max-width: 768px) {
+  .file-share-container {
+    width: 80%;
+  }
 }

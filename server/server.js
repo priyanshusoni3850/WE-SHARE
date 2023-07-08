@@ -5,20 +5,16 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
-const File=require("./model/File");
-const Text=require("./model/Text");
-require("./db/conn")
-// Enable Cross-Origin Resource Sharing (CORS)
-app.use(cors(
-  {
-    // origin:["https://rk-share.netlify.app/"],
-    origin:'*',
-    methods:["POST","GET"],
-    credentials: true
-  }
-));
-require('dotenv').config();
+const File = require("./model/File");
+const Text = require("./model/Text");
+require("./db/conn");
 
+// Enable Cross-Origin Resource Sharing (CORS)
+app.use(cors({
+  origin: '*',
+  methods: ["POST", "GET"],
+  credentials: true
+}));
 
 // Set up middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,7 +22,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.static('../frontend/build'));
-
 
 // Set up storage location for uploaded files
 const storage = multer.diskStorage({
@@ -41,77 +36,38 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-          storage,
-          limits: {
-            fileSize: 5 * 1024 * 1024, // 5 MB
-          },
-        });
-
-
-// Endpoint for uploading files
-app.post('/api/upload', upload.single('file'), async (req, res) => {
-  const file = req.file;
-
-  // console.log(file);
-  // console.log(req.body.Code);
-  if (!file) {
-          // res.send("no file");
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-  const uploadedFile = new File({
-    filename: file.filename,
-    Code:req.body.Code,
-    originalname: file.originalname,
-    mimetype: file.mimetype,
-    size: file.size,
-  });
-  await uploadedFile.save();
-  return res.json(uploadedFile);
+  storage,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100 MB
+  },
 });
 
+// Endpoint for uploading files
+app.post('/api/upload', upload.array('files'), async (req, res) => {
+  const files = req.files;
 
+  if (!files || files.length === 0) {
+    return res.status(400).json({ error: 'No files uploaded' });
+  }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const uploadedFiles = [];
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const uploadedFile = new File({
+      filename: file.filename,
+      Code: req.body.Code,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size,
+    });
+    await uploadedFile.save();
+    uploadedFiles.push(uploadedFile);
+  }
+
+  return res.json(uploadedFiles);
+});
 
 // Endpoint for downloading files
-
-
-
-// app.get('/api/download/:Code', async(req, res) => {
-//   // console.log("clicked");
-//   const FindCode = req.params.Code;
-//   const filedata=await File.findOne({Code:FindCode});
-//   const filename=await filedata.filename;
-//   const save=`${__dirname}/uploads/${filename}`;
-//   save.save();
-//   // res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-
-// // Set the Content-Disposition header to "attachment"
-// res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-
-// // Set the Content-Type header based on the file extension
-// const ext = path.extname(filename);
-// let contentType = 'application/octet-stream';
-// switch (ext) {
-//   case '.docx':
-//     contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-//     break;
-//   case '.pdf':
-//     contentType = 'application/pdf';
-//     break;
-//   default:
-//     break;
-// }
-// res.setHeader('Content-Type', contentType);
-
-//   res.sendFile(save);
-//   // res.sendFile(`${__dirname}/uploads/${filename}`);
-// });
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 app.get('/api/download/:Code', async (req, res) => {
   const FindCode = req.params.Code;
   const filedata = await File.findOne({ Code: FindCode });
@@ -130,45 +86,31 @@ app.get('/api/download/:Code', async (req, res) => {
   res.setHeader('Content-Type', filedata.mimetype);
   
   res.sendFile(filePath);
-  // res.send("hii")
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.get("/",(req,res)=>{
-  res.json("hii");
-});
-
-
-
-///////////////////////////////////////////////////////old code /////////////////////////////////////////////////////////
-
-// Endpoint for sharing text
+// Your commented code for sharing text
 // app.post('/api/share', async (req, res) => {
+//   console.log("hitted");
 //   const text = req.body.text || '';
-//   // console.log(text);
-//   const sharedText = new Text({ content: text });
-//   await sharedText.save();
-//   return res.json({ message: 'Text shared successfully' });
+//   console.log(text);
+//   const client_code = req.body.clientcode;
+//   console.log(client_code);
+
+//   let code_exist=await Text.findOne({code:client_code}).exec();
+
+//   if(code_exist){
+//     code_exist.content=text;
+//     await code_exist.save();
+//     return res.json({ message: 'Text shared successfully' });
+//   }else{
+//     const sharedText = new Text({ content: text ,code:client_code});
+//     await sharedText.save();
+//     return res.json({ message: 'Text shared successfully' });
+
+//   }
 // });
 
-
-
-///////////////////////////////////////////////////////////old code //////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////new code ////////////////////////////////////////////////////////
-
+// Endpoint for sharing text
 app.post('/api/share', async (req, res) => {
   console.log("hitted");
   const text = req.body.text || '';
@@ -176,97 +118,56 @@ app.post('/api/share', async (req, res) => {
   const client_code = req.body.clientcode;
   console.log(client_code);
 
-  let code_exist=await Text.findOne({code:client_code}).exec(); // Modified this line
+  let code_exist = await Text.findOne({ code: client_code }).exec();
 
-  if(code_exist){
-    code_exist.content=text;
+  if (code_exist) {
+    code_exist.content = text;
     await code_exist.save();
     return res.json({ message: 'Text shared successfully' });
-  }else{
-    const sharedText = new Text({ content: text ,code:client_code});
+  } else {
+    const sharedText = new Text({ content: text, code: client_code });
     await sharedText.save();
     return res.json({ message: 'Text shared successfully' });
-
   }
-  
-  // console.log(text);
-  // const sharedText = new Text({ content: text ,code:client_code});
-  // await sharedText.save();
 });
 
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////new code//////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////old code //////////////////////////////////////////////////////////
-
-// Endpoint for fetching shared text
-// app.get('/api/shared-text', async (req, res) => {
-//   const sharedText = await Text.findOne().sort({ _id: -1 });
+// Your commented code for fetching shared text
+// app.get('/api/shared-text/:getcode', async (req, res) => {
+//   const getcode=req.params.getcode;
+//   const sharedText = await Text.findOne({code:getcode});
 //   return res.json({ text: sharedText ? sharedText.content : '' });
 // });
 
-///////////////////////////////////////////////////////////old code ///////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////new code /////////////////////////////////////////////////////////
-
-
+// Endpoint for fetching shared text
 app.get('/api/shared-text/:getcode', async (req, res) => {
-  const getcode=req.params.getcode;
-  const sharedText = await Text.findOne({code:getcode});
-  // const sharedText = await Text.findOne().sort({ _id: -1 });
+  const getcode = req.params.getcode;
+  const sharedText = await Text.findOne({ code: getcode });
   return res.json({ text: sharedText ? sharedText.content : '' });
 });
 
-
-/////////////////////////////////////////////////////////// new code///////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////myy code ///////////////////////////////////////////////////////
-// cheking for code
-
+// Your commented code for checking code availability
 // app.get('/api/check-code/:code', async (req, res) => {
 //   const options = { maxTimeMS: 20000 };
-//   // console.log("checked");
-//   const codefind = req.params;
-//   console.log(codefind);
-//   const result = await File.findOne({ Code:code }).maxTimeMS(30000);
-//   // console.log(result);
+//   const code = req.params.code;
+
+//   const result = await File.findOne({ Code: code.toString() }, null, {timeout:30000});
+
+//   console.log(result);
 
 //   if (result) {
-//     // res.send("already exist");
 //     console.log("exist");
 //     return res.json({ message:true });
 //   } else {
 //     return res.json({ message: false });
 //   } 
-
-
-// const result = await File.findOne({ Code:codefind },options).lean().cursor();
-
-// console.log(result);
-//   if (result) {
-//     // res.send("already exist");
-//     console.log("exist");
-//     return res.json({ message:true });
-//   } else {
-//     return res.json({ message: false });
-//   } 
-
-
 // });
-///////////////////////////////////////////////////////////my code ////////////////////////////////////////////////////////
+
+// Endpoint for checking code availability
 app.get('/api/check-code/:code', async (req, res) => {
   const options = { maxTimeMS: 20000 };
   const code = req.params.code;
 
-  const result = await File.findOne({ Code: code.toString() }, null, {timeout:30000});
+  const result = await File.findOne({ Code: code.toString() }, null, { timeout: 30000 });
 
   console.log(result);
 
@@ -275,32 +176,12 @@ app.get('/api/check-code/:code', async (req, res) => {
     return res.json({ message:true });
   } else {
     return res.json({ message: false });
-  } 
-
-  // File.findOne({ Code: code }, null, { timeout: 30000 }, (err, file) => {
-  //   console.log(file);
-  // });
-  
-
-
-// console.log(result);
-
-//   if (result) {
-//     console.log("exist");
-//     return res.json({ message:true });
-//   } else {
-//     return res.json({ message: false });
-//   } 
+  }
 });
-
-
-
-
 
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
 
 
 
