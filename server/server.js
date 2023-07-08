@@ -43,7 +43,7 @@ const upload = multer({
 });
 
 // Endpoint for uploading files
-app.post('/api/upload', upload.array('files'), async (req, res) => {
+app.post('/api/upload', upload.array('file'), async (req, res) => {
   const files = req.files;
 
   if (!files || files.length === 0) {
@@ -88,35 +88,10 @@ app.get('/api/download/:Code', async (req, res) => {
   res.sendFile(filePath);
 });
 
-// Your commented code for sharing text
-// app.post('/api/share', async (req, res) => {
-//   console.log("hitted");
-//   const text = req.body.text || '';
-//   console.log(text);
-//   const client_code = req.body.clientcode;
-//   console.log(client_code);
-
-//   let code_exist=await Text.findOne({code:client_code}).exec();
-
-//   if(code_exist){
-//     code_exist.content=text;
-//     await code_exist.save();
-//     return res.json({ message: 'Text shared successfully' });
-//   }else{
-//     const sharedText = new Text({ content: text ,code:client_code});
-//     await sharedText.save();
-//     return res.json({ message: 'Text shared successfully' });
-
-//   }
-// });
-
 // Endpoint for sharing text
 app.post('/api/share', async (req, res) => {
-  console.log("hitted");
   const text = req.body.text || '';
-  console.log(text);
   const client_code = req.body.clientcode;
-  console.log(client_code);
 
   let code_exist = await Text.findOne({ code: client_code }).exec();
 
@@ -131,36 +106,12 @@ app.post('/api/share', async (req, res) => {
   }
 });
 
-// Your commented code for fetching shared text
-// app.get('/api/shared-text/:getcode', async (req, res) => {
-//   const getcode=req.params.getcode;
-//   const sharedText = await Text.findOne({code:getcode});
-//   return res.json({ text: sharedText ? sharedText.content : '' });
-// });
-
 // Endpoint for fetching shared text
 app.get('/api/shared-text/:getcode', async (req, res) => {
   const getcode = req.params.getcode;
   const sharedText = await Text.findOne({ code: getcode });
   return res.json({ text: sharedText ? sharedText.content : '' });
 });
-
-// Your commented code for checking code availability
-// app.get('/api/check-code/:code', async (req, res) => {
-//   const options = { maxTimeMS: 20000 };
-//   const code = req.params.code;
-
-//   const result = await File.findOne({ Code: code.toString() }, null, {timeout:30000});
-
-//   console.log(result);
-
-//   if (result) {
-//     console.log("exist");
-//     return res.json({ message:true });
-//   } else {
-//     return res.json({ message: false });
-//   } 
-// });
 
 // Endpoint for checking code availability
 app.get('/api/check-code/:code', async (req, res) => {
@@ -169,11 +120,8 @@ app.get('/api/check-code/:code', async (req, res) => {
 
   const result = await File.findOne({ Code: code.toString() }, null, { timeout: 30000 });
 
-  console.log(result);
-
   if (result) {
-    console.log("exist");
-    return res.json({ message:true });
+    return res.json({ message: true });
   } else {
     return res.json({ message: false });
   }
@@ -182,113 +130,3 @@ app.get('/api/check-code/:code', async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// const mongoose = require('mongoose');
-// const cors = require('cors');
-// const File=require("./model/File");
-// require("./db/conn")
-
-// const app = express();
-// const port = process.env.PORT || 3001;
-
-// // Set up middleware
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// // Set up static files
-// app.use(express.static('public'));
-
-// // Set up MongoDB connection
-// // mongoose.connect('mongodb://localhost/text-file-sharing', { useNewUrlParser: true });
-
-
-// // Define schema for file model
-// // const fileSchema = new mongoose.Schema({
-// //   name: String,
-// //   path: String
-// // });
-
-// // Define file model
-// // const File = mongoose.model('File', fileSchema);
-
-// // Define routes
-// /*
-// MyModel.find().then((docs) => {
-//   // handle the results
-// }).catch((err) => {
-//   // handle the error
-// });
-// */
-// app.get('/api/files', function(req, res) {
-
-//           File.find().then((docs)=>{
-//                     res.json(docs);
-//           }).catch((err)=>{
-//                     console.log(err);
-//           })
-// });
-
-// app.post('/api/files', function(req, res) {
-//   const file = new File();
-//   file.name = req.body.name;
-//   file.path = req.body.path;
-//   console.log(file.name);
-//   file.save().then(()=>{
-//             res.send('File uploaded successfully!');
-
-//   }
-//   ).catch((err)=>{
-//           console.log(err);
-//   })
-// });
-
-// // Start server
-// app.listen(port, function() {
-//   console.log(`Server started on port ${port}`);
-// });

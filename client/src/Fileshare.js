@@ -139,7 +139,6 @@ export default function FileShare() {
               <ul>
                 <li>Code: {code}</li>
                 <li>Original name: {uploadedFile.originalname}</li>
-                {/* <li>Type: {uploadedFile.mimetype}</li> */}
                 <li>Size: {(uploadedFile.size / 1024).toFixed(2)} KB</li>
                 <li>
                   <button
