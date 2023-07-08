@@ -7,6 +7,7 @@ const path = require('path');
 const app = express();
 const File = require("./model/File");
 const Text = require("./model/Text");
+const AdmZip = require('adm-zip');
 require("./db/conn");
 
 // Enable Cross-Origin Resource Sharing (CORS)
@@ -43,7 +44,7 @@ const upload = multer({
 });
 
 // Endpoint for uploading files
-app.post('/api/upload', upload.array('files'), async (req, res) => {
+app.post('/api/upload', upload.array('file'), async (req, res) => {
   const files = req.files;
 
   if (!files || files.length === 0) {
@@ -69,23 +70,31 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
 
 // Endpoint for downloading files
 app.get('/api/download/:Code', async (req, res) => {
-  const FindCode = req.params.Code;
-  const filedata = await File.findOne({ Code: FindCode });
-  
-  if (!filedata) {
-    return res.status(404).json({ error: 'File not found' });
+  const code = req.params.Code;
+  const files = await File.find({ Code: code });
+
+  if (!files || files.length === 0) {
+    return res.status(404).json({ error: 'Files not found' });
   }
-  
-  const filePath = path.join(__dirname, 'uploads', filedata.filename);
-  console.log(filePath);
-  
+
+  const zip = new AdmZip();
+  const zipFileName = `files_${code}.zip`;
+
+  files.forEach((file) => {
+    const filePath = path.join(__dirname, 'uploads', file.filename);
+    zip.addLocalFile(filePath);
+  });
+
+  const buffer = zip.toBuffer();
+
   // Set the Content-Disposition header to "attachment"
-  res.setHeader('Content-Disposition', `attachment; filename="${filedata.originalname}"`);
-  
-  // Set the Content-Type header based on the file mimetype
-  res.setHeader('Content-Type', filedata.mimetype);
-  
-  res.sendFile(filePath);
+  res.setHeader('Content-Disposition', `attachment; filename="${zipFileName}"`);
+
+  // Set the Content-Type header to "application/zip"
+  res.setHeader('Content-Type', 'application/zip');
+
+  // Send the zip file as response
+  res.send(buffer);
 });
 
 // Endpoint for sharing text
